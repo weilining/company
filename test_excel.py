@@ -23,3 +23,4 @@ for line in lines:
 # w =copy('xqtest.xls')
 # w.get_sheet(0).write(0,0,"foo")
 w.save('xqtest.xls')
+input("Tip: press Enter , close window!")
