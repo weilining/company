@@ -38,5 +38,5 @@ wb.sheets['template'].range('D22').value='1.2'
 wb.save()
 wb.close()
 app.quit()
-input("结束")
+input("按任意键结束结束")
 
