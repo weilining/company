@@ -22,8 +22,6 @@ column=display_rotated(0)
 count=11
 for line in lines:
     column=display_rotated(count)
-    s=column+str(row)
-    print(s)
     wb.sheets['template'].range(s).value = line
     count+=1
 wb.save()
