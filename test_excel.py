@@ -1,6 +1,5 @@
 import openpyxl
 import datetime
-import os
 from openpyxl.utils import get_column_letter, column_index_from_string
 
 user = "邓杰"
@@ -10,26 +9,6 @@ marking = "AD0018AU2-ES"
 dut_id = 10
 pm_pos_start_list    = {'1.56':'L20', '1.6':'L48', '1.64':'L83', '1.68':'L113', '1.72':'L144'}
 nonce_pos_start_list = {'1.56':'H26', '1.6':'H59', '1.64':'H89', '1.68':'H119', '1.72':'H150'}
-
-base_options = "--bmsc-options 115200:0 -o stratum.f2pool.com:3333 -u xuelei5151.1 -T --set-dc-com COM6:9600 --pattern "
-special_options="--bmsc-rdreg 0000 --bmsc-vil 1 --bmsc-ctype 1390 --bmsc-blken 52:1 --bmsc-domain 0 --bmsc-domain-cross "
-log_options="--logfile 1393.log --logfile-openflag w "
-
-for volt in pm_pos_start_list.keys():
-    extra_options = "--bmsc-setpll 1390:{freq} --cp2103-reset-chip --bmsc-voltage {volt_value} --bmsc-scan-freq-step {scan_freq_step} --bmsc-scan-freq-nonce-num {scan_freq_nonce_num} ".format(
-                freq=300,
-                volt_value=float(volt),
-                scan_freq_nonce_num=208,
-                scan_freq_step=50
-    )
-    run_cgminer_str="cgminer-1393.exe "+base_options+special_options+extra_options+log_options
-    state_cur_name="state_cur_"+volt
-    nonce_state_cur_name="nonce_state_cur_"+volt
-    os.system(run_cgminer_str)
-    os.system("cat 1393.log | grep ':golden nonce' | awk '{ printf $5\"\\t\"$9 \"\\n\"}' | awk -F, '{ printf $1\"\\n\" }' | awk '{nonce[$1]=nonce[$1](\"\\t\"$2);sum[$1]+=$2}END{for(i in nonce)print i,\"\\t\"sum[i],nonce[i]}' | sort > nonce_state")
-    os.system('''cat 1393.log | grep 'After test pattern, Get DC current is'| awk '{printf "%.4f\\n",$10}' > '''+state_cur_name)
-    os.system('''cat 1393.log | grep 'Before open core, Get DC current is'| awk '{printf "%.4f\\n",$10}' > leakage_cur''')
-    os.system('''awk '{s=$1;getline<"nonce_state";print s"\\t",$0}' '''+state_cur_name+''' | awk '{s=$0;getline<"leakage_cur";print $1"\\t"s}' > '''+nonce_state_cur_name)
 
 wb = openpyxl.load_workbook('temp.xlsx')
 sheet = wb.copy_worksheet(wb.worksheets[0])
